@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="Representing any video in 4D via trajectory fields.">
+    <meta name="keywords" content="Trace Anything">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Trace Anything</title>
+
+    <link rel="icon" type="image/x-icon" href="./static/images/icon.png">
+
+    <!-- Social sharing metadata -->
+    <meta property="og:type" content="website">
+    <meta property="og:image:type" content="image/png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Trace Anything">
+    <meta name="twitter:description" content="Representing any video in 4D via trajectory fields.">
+    <meta name="twitter:image" content="./static/images/teaser.png">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans:400,600|Noto+Sans:400,600|Castoro:400,600" rel="stylesheet">
+
+    <!-- Normalize default browser styles -->
+    <link href="https://cdn.jsdelivr.net/npm/modern-normalize@3.0.1/modern-normalize.min.css" rel="stylesheet" />
+
+    <!-- Bulma CSS (only one version) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+
+    <!-- Carousel (only one version) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.19.0/tabler-icons-outline.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./static/css/index.css">
+
+    <!-- JS libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/js/bulma-carousel.min.js"></script>
+
+    <!-- Custom JS -->
+    <script defer src="./static/js/index.js"></script>
+    <script defer src="./static/js/video-compare.js"></script>
+
+    
+
+
+
+
+    <style>
+        .center-image {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .item {
+            margin: 10px;
+        }
+
+        .blend-img-background {
+            mix-blend-mode: multiply;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px 0;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+ 
+        nav {
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            width: 100%;
+            gap: 10px;
+        }
+
+        nav ul li {
+            flex: 1;
+            display: flex;
+            margin: 0;
+        }
+
+        nav ul li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f5f5f5;
+            color: #363636;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            min-height: 50px;
+            flex-grow: 1;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+
+        nav ul li a:hover {
+            background-color: #e4e4e4;
+            transform: scale(1.05);
+        }
+
+        nav ul li a:active {
+            background-color: #d3d3d3;
+            transform: scale(0.95);
+        }
+
+        nav ul li a.active {
+            background-color: #cccccc;
+            color: #000000;
+        }
+
+
+        .dynamic-section {
+            display: block;
+        }
+
+        .panel-style {
+            background-color: #fafafa;
+            padding: 20px;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .thumbnail-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px auto 10px;
+            max-width: 100%;
+        }
+
+        .video-container {
+            position: relative;
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .video-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            align-items: center;
+        }
+
+        .video-label {
+            flex: 1;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .content-text {
+            max-width: 90%;
+            margin: 0 auto;
+            text-align: justify;
+            font-size: 16px;
+        }
+
+        .math-formula {
+            max-width: 90%;
+            margin: 0 auto;
+            text-align: center;
+        }
+        #carousel-results {
+            visibility: hidden;
+        }
+
+        @media screen and (max-width: 768px) {
+            #compare-video, #compare-video-das3r, #compare-video-cut3r {
+                width: 100% !important;
+                height: 200px !important;
+            }
+            
+            #compare-description, #compare-description-das3r, #compare-description-cut3r {
+                height: auto !important;
+                min-height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+            }
+            
+            .thumbnail {
+                width: 80px !important;
+            }
+        }
+        
+        @media screen and (min-width: 769px) {
+            #compare-video, #compare-video-das3r, #compare-video-cut3r {
+                width: 90% !important;
+                height: 500px !important;
+            }
+            
+            #compare-description, #compare-description-das3r, #compare-description-cut3r {
+                height: 60px !important;
+                overflow: auto !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="hero" style="margin-bottom: 0; padding-bottom: 0;">
+        <div class="hero-body" style="padding-bottom: 1rem;">
+            <div class="container is-max-desktop">
+                <div class="columns is-centered" style="margin-bottom: 0">
+                    <div class="column is-max-desktop has-text-centered">
+                        <h1 class="title is-2 publication-title" 
+                            style="margin-bottom:0rem; max-width: 85%; margin-left: auto; margin-right: auto; text-align:center;">
+                        <span style="font-size:2.5rem; font-weight:700;">Trace Anything</span><br>
+                        <span style="font-size:2.3rem; font-weight:500;">Representing Any Video in 4D via Trajectory Fields</span>
+                        </h1>   
+                    </div>
+                </div>
+                <div class="columns is-centered">
+                    <div class="column is-four-fifths has-text-centered">
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block">
+                                <a href="https://xinhangliu.com/">Xinhang Liu</a><sup>1,2</sup></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block">
+                                <a href="https://henry123-boy.github.io/">Yuxi Xiao</a><sup>1,3</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://donydchen.github.io/">Yuedong Chen</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://scholar.google.com.sg/citations?user=Q8iay0gAAAAJ&hl=en">Jiashi Feng </a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span> <br>
+                             <span class="author-block">
+                                <a href="https://yuwingtai.github.io/">Yu-Wing Tai</a><sup>4</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://cse.hkust.edu.hk/~cktang/bio.html">Chi-Keung Tang</a><sup>2</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                            <span class="author-block">
+                                <a href="https://bingykang.github.io/">Bingyi Kang</a><sup>1</sup>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                        </div>
+
+                        <div class="is-size-5 publication-authors">
+                            <span class="author-block"><sup>1</sup>Bytedance Seed</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block"><sup>2</sup>HKUST</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block"><sup>3</sup>Zhejiang University</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span class="author-block"><sup>4</sup>Dartmouth College</span>
+                        </div>
+
+                        <div class="column has-text-centered">
+                            <div class="publication-links">
+                                <span class="link-block">
+                                    <a href="" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="ai ai-arxiv"></i>
+                                        </span>
+                                        <span>arXiv</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="" class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <i class="fas fa-video"></i>
+                                        </span>
+                                        <span>Video</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="interactive.html" target="_blank"
+                                        class="external-link button is-normal is-rounded is-dark">
+                                        <span class="icon">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"
+                                                style="fill: #ffffff">
+                                                <path
+                                                    d="M256 0c-25.3 0-47.2 14.7-57.6 36c-7-2.6-14.5-4-22.4-4c-35.3 0-64 28.7-64 64V261.5l-2.7-2.7c-25-25-65.5-25-90.5 0s-25 65.5 0 90.5L106.5 437c48 48 113.1 75 181 75H296h8c1.5 0 3-.1 4.5-.4c91.7-6.2 165-79.4 171.1-171.1c.3-1.5 .4-3 .4-4.5V160c0-35.3-28.7-64-64-64c-5.5 0-10.9 .7-16 2V96c0-35.3-28.7-64-64-64c-7.9 0-15.4 1.4-22.4 4C303.2 14.7 281.3 0 256 0zM240 96.1c0 0 0-.1 0-.1V64c0-8.8 7.2-16 16-16s16 7.2 16 16V95.9c0 0 0 .1 0 .1V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96c0 0 0 0 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16v55.9c0 0 0 .1 0 .1v80c0 13.3 10.7 24 24 24s24-10.7 24-24V160.1c0 0 0-.1 0-.1c0-8.8 7.2-16 16-16s16 7.2 16 16V332.9c-.1 .6-.1 1.3-.2 1.9c-3.4 69.7-59.3 125.6-129 129c-.6 0-1.3 .1-1.9 .2H296h-8.5c-55.2 0-108.1-21.9-147.1-60.9L52.7 315.3c-6.2-6.2-6.2-16.4 0-22.6s16.4-6.2 22.6 0L119 336.4c6.9 6.9 17.2 8.9 26.2 5.2s14.8-12.5 14.8-22.2V96c0-8.8 7.2-16 16-16c8.8 0 16 7.1 16 15.9V232c0 13.3 10.7 24 24 24s24-10.7 24-24V96.1z">
+                                                </path>
+                                            </svg>
+                                        </span>
+                                        <span>Interactive Results</span>
+                                    </a>
+                                </span>
+                                <span class="link-block">
+                                    <a href="" 
+                                        class="external-link button is-normal is-rounded is-dark" target="_blank" rel="noopener noreferrer">
+                                        <span class="icon">
+                                        <i class="fab fa-github"></i>
+                                        </span>
+                                        <span>Code</span>
+                                    </a>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="hero teaser">
+        <div class="container">
+            <div class="hero-body is-max-widescreen">
+            <div class="columns is-centered">
+                <div class="column is-four-fifths"><!-- 4/5 width, centered -->
+                
+                <div class="notification is-info is-rounded" 
+            style="text-align:center; padding:5px; background-color:#3a85cc8f; border-radius:10px;">
+        <p style="margin-bottom:0; color:#fff; font-size:20px; font-family:inherit;">
+            TL;DR: With a single forward pass, <strong>Trace Anything</strong> represents any video in 4D as a <strong>trajectory field</strong>, <br>
+            a dense mapping assigning each pixel in each frame to a parametric 3D trajectory.
+        </p>
+        </div>
+
+
+                <video id="teaser" preload="auto" autoplay muted loop playsinline
+                        style="pointer-events:none; display:block; width:100%; margin:0;">
+                    <source src="./static/videos/teaser.mp4" type="video/mp4">
+                </video>
+
+                </div>
+            </div>
+            </div>
+        </div>
+        </section>
+
+
+
+    <section class="section ">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+            <h2 class="title is-3">Abstract</h2>
+            <div class="content has-text-justified">
+            <p>
+                Building 4D video representations to model underlying spacetime constitutes a crucial step toward understanding dynamic scenes, 
+                yet there is no consensus on the paradigm: current approaches resort to additional estimators such as depth, flow, or tracking, 
+                or to heavy per-scene optimization, making them brittle and hard to generalize. In a video, its atomic unit, the pixel, follows 
+                a continuous 3D trajectory that unfolds over time, acting as the atomic primitive of dynamics. Recognizing this, we propose to 
+                represent any video as a <strong>Trajectory Field</strong>: a dense mapping that assigns each pixel in each frame to a parametric 3D trajectory.
+                To this end, we introduce <strong>Trace Anything</strong>, a neural network that predicts the trajectory field in a feed-forward manner. 
+                Specifically, for each video frame, the model outputs a series of control point maps, defining parametric trajectories for each pixel.
+                Together, our representation and model directly construct a 4D video representation in a single forward pass, without additional estimators 
+                or global alignment. We develop a <strong>synthetic data platform</strong> to construct a training dataset and a benchmark for trajectory field estimation.
+                Experiments show that Trace Anything surpasses existing methods or performs competitively on the new benchmark and established 
+                point tracking benchmarks, with significant efficiency gains. Moreover, it demonstrates new capabilities such as goal-conditioned 
+                manipulation, motion forecasting, and spatio-temporal fusion. 
+            </p>
+            </div>
+
+            <!-- Add teaser image here -->
+            <div style="margin-top: 1.5rem; text-align: center;">
+            <img src="./static/images/teaser.png" 
+                style="max-width: 100%; height: auto; border-radius: 8px;">
+            </div>
+
+        </div>
+        </div>
+    </div>
+    </section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3 has-text-centered">Trajectory Field</h2>
+
+        <!-- Two-column split inside the 4/5 width -->
+        <div class="columns is-vcentered">
+          
+          <!-- Left: Text -->
+         <div class="column" style="flex: 0 0 55%; max-width: 55%;">
+  <div class="content has-text-justified">
+    <p>
+      Pixels, the atomic units of video, 
+      naturally trace out <em>3D trajectories</em> in the world, which serve as the fundamental 
+      primitive of dynamics. Recognizing this, we propose <strong>Trajectory Fields</strong>, a versatile 
+      4D representation for any video that associates each pixel in each frame with a parametric 3D trajectory. 
+      Unlike prior 4D reconstruction methods that produce disjoint per-frame point clouds and rely on estimated 
+      optical flow or 2D tracks to build cross-frame correspondences, Trajectory Fields offer a more direct and 
+      compact way to model scene dynamics. Ideally, two conditions should hold:</p>
+    <p style="margin-top: -1rem;"><strong>(C1)</strong> Pixels in static regions collapse to degenerate trajectories.</p>
+    <p style="margin-top: -1rem;"><strong>(C2)</strong> Corresponding pixels from different frames map to the same 3D trajectory.</p>
+  </div>
+</div>
+
+          <!-- Right: Figure -->
+          <div class="column" style="flex: 0 45%; max-width: 45%;">
+            <img src="./static/images/traj_field.png" 
+                 style="max-width: 100%; height: auto; border-radius: 8px;">
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section ">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+            <h2 class="title is-3">Trace Anything Model</h2>
+            <div class="content has-text-justified">
+            <p>
+            Building on this representation, we propose <strong>Trace Anything</strong>, a feed-forward neural network that
+            estimates trajectory fields directly from video frames. With a single forward
+            pass over all input frames, it predicts a stack of control point maps for each frame, defining spline-based 
+            parametric trajectories for every pixel. This one-pass scheme eliminates intermediate estimators 
+            and iterative global alignment, predicting all trajectories (per pixel per frame) jointly in a shared world 
+            coordinate system. It generalizes across diverse input settings, including monocular videos, 
+            image pairs, and unordered photo sets.
+            </p>
+            </div>
+
+            <!-- Add teaser image here -->
+            <div style="margin-top: 1.5rem; text-align: center;">
+            <img src="./static/images/arch.png" 
+                style="max-width: 100%; height: auto; border-radius: 8px;">
+            </div>
+
+        </div>
+        </div>
+    </div>
+    </section>
+
+   <section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Qualitative Results on Trajectory Field Estimation</h2>
+        <div class="content has-text-justified">
+            <p>
+                Our approach naturally accommodates diverse input configurations and estimates the trajectory field in a single forward pass. 
+                The inference time is approximately <span style="color: red;">2.3&nbsp;seconds</span> for a 30-frame video and 
+                <span style="color: red;">0.2&nbsp;seconds</span> for an image pair on an NVIDIA A100 GPU.
+            </p>
+            </div>
+
+        <p style="font-size: 20px; text-align: center; margin-bottom: 0.5rem;">
+        <strong>Choose input setting to view corresponding qualitative results:</strong>
+        </p>
+
+        <div class="tabs is-centered is-toggle is-toggle-rounded is-medium custom-tabs" role="tablist" aria-label="Input setting selector">
+        <ul>
+            <li class="is-active">
+            <a role="tab" aria-selected="true" data-target="group-video"><strong>Videos</strong></a>
+            </li>
+            <li>
+            <a role="tab" aria-selected="false" data-target="group-pair"><strong>Image Pairs</strong></a>
+            </li>
+            <li>
+            <a role="tab" aria-selected="false" data-target="group-unordered"><strong>Unstructured Image Sets</strong></a>
+            </li>
+        </ul>
+        </div>
+
+        <!-- Group: video -->
+        <div id="group-video" role="tabpanel">
+        <div class="content has-text-justified" style="margin-top: 1rem;">
+            <p>
+            Our predictions faithfully capture motions ranging from near-rigid transformations, 
+            such as a toy train moving along a track, to highly non-rigid deformations, 
+            such as humans or animals in motion. They also handle severe occlusions 
+            while preserving the global scene structure.
+            </p>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <video preload="auto" autoplay muted loop playsinline style="pointer-events:none; display:block; width:100%; margin:0;">
+            <source src="./static/videos/video_input_1.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <video preload="auto" autoplay muted loop playsinline style="pointer-events:none; display:block; width:100%; margin:0;">
+            <source src="./static/videos/video_input_2.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div class="content has-text-justified" style="margin-top: 1rem;">
+            <p>
+            Our method effectively disentangles static and dynamic components. After Trace Anything
+    predicts control points, we compute the variance over the control-point set associated with each pixel;
+    thresholding this per-pixel variance yields a dynamic mask that cleanly separates static from dynamic regions.
+            </p>
+        </div>
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <video preload="auto" autoplay muted loop playsinline style="pointer-events:none; display:block; width:100%; margin:0;">
+            <source src="./static/videos/masks.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        </div>
+
+
+        <!-- Group: pair -->
+        <div id="group-pair" class="is-hidden" role="tabpanel">
+        <div class="content has-text-justified" style="margin-top: 1rem;">
+            <p>
+            By inferring trajectory fields from image pairs, our model effectively reconstructs the implied 
+            spatio-temporal dynamics and interpolates intermediate motion. In the context of robot learning, 
+            this naturally aligns with goal-conditioned manipulation, where the predicted trajectories can 
+            be interpreted as feasible robot end-effector motions.
+            </p>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <video preload="auto" autoplay muted loop playsinline style="pointer-events:none; display:block; width:100%; margin:0;">
+            <source src="./static/videos/pair_input_1.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <video preload="auto" autoplay muted loop playsinline style="pointer-events:none; display:block; width:100%; margin:0;">
+            <source src="./static/videos/pair_input_2.mp4" type="video/mp4">
+            </video>
+        </div>
+        </div>
+
+
+        <!-- Group: unordered -->
+        <div id="group-unordered" class="is-hidden" role="tabpanel">
+        <div class="content has-text-justified" style="margin-top: 1rem;">
+            <p>
+            Our method also handles unstructured, unordered image sets—a setting not addressed by prior work. 
+            These inputs lack both temporal ordering and continuous camera motion, yet our framework is inherently 
+            designed to cope with such challenging cases. For clarity, we display the input images 
+            in chronological order here, although no sequence information is provided to the model.
+            </p>
+        </div>
+
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <video preload="auto" autoplay muted loop playsinline style="pointer-events:none; display:block; width:100%; margin:0;">
+            <source src="./static/videos/unordered_input_1.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div style="margin-top: 1.5rem; text-align: center;">
+            <video preload="auto" autoplay muted loop playsinline style="pointer-events:none; display:block; width:100%; margin:0;">
+            <source src="./static/videos/unordered_input_2.mp4" type="video/mp4">
+            </video>
+        </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Emergent Capabilities</h2>
+
+        <div class="content has-text-justified">
+            <p>
+                The Trajectory Field representation and the Trace Anything model exhibit emergent capabilities that competing approaches do not support.
+            </p>
+            </div>
+
+        <p style="font-size: 20px; text-align: center; margin-bottom: 0.5rem;">
+        <strong>Choose capability to explore:</strong>
+        </p>
+
+
+        <!-- Tabs -->
+        <div class="tabs is-centered is-toggle is-toggle-rounded is-medium custom-tabs" role="tablist" aria-label="Emergent capability selector">
+          <ul>
+            <li class="is-active">
+              <a role="tab" aria-selected="true" data-target="cap-forecast"><strong>Motion Forecasting</strong></a>
+            </li>
+            <li>
+              <a role="tab" aria-selected="false" data-target="cap-goal"><strong>Goal-Conditioned Manipulation</strong></a>
+            </li>
+            <li>
+              <a role="tab" aria-selected="false" data-target="cap-fusion"><strong>Spatio-Temporal Fusion</strong></a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Pane: Motion Forecasting -->
+        <div id="cap-forecast" role="tabpanel">
+          <div class="columns is-centered" style="margin-top: 1.5rem; align-items: center;">
+            <!-- 左侧文字：60% -->
+            <div class="column is-7">
+                <div class="content has-text-justified">
+                <p>
+                    From a single initial image—and when coupled with a text-conditioned video generator—our model
+                    forecasts trajectory fields under natural-language instructions. This enables <em>what-if</em>
+                    simulations of scene dynamics and quantitative analysis of how motions evolve over time.
+                </p>
+                </div>
+            </div>
+
+            <!-- 右侧图片：25% -->
+            <div class="column is-3 has-text-centered">
+                <img src="./static/images/forecast_initial.png"
+                    alt="Initial image for motion forecasting"
+                    style="max-width: 100%; height: auto; border-radius: 8px;">
+            </div>
+            </div>
+
+
+          <div style="margin-top: 1.5rem; text-align: center;">
+            <video preload="auto" autoplay muted loop playsinline
+                   style="pointer-events:none; display:block; width:100%; margin:0;">
+              <source src="./static/videos/forecast_1.mp4" type="video/mp4">
+            </video>
+          </div>
+
+          <div style="margin-top: 1.5rem; text-align: center;">
+            <video preload="auto" autoplay muted loop playsinline
+                   style="pointer-events:none; display:block; width:100%; margin:0;">
+              <source src="./static/videos/forecast_2.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+
+<!-- Pane: Goal-Conditioned Manipulation -->
+<div id="cap-goal" class="is-hidden" role="tabpanel">
+  <div class="content has-text-justified" style="margin-top: 1rem;">
+    <p>
+      From an image pair representing the <em>initial</em> and <em>goal</em> states, Trace Anything
+      estimates per-pixel 3D trajectories. Reprojecting these trajectories with the estimated camera poses yields
+      dense 2D motion fields. In the context of robot learning, these 2D/3D trajectories can be interpreted as
+      feasible end-effector motions for goal-conditioned manipulation, providing a continuous, geometry-aware bridge
+      from visual goals to actionable control signals.
+    </p>
+  </div>
+
+  <div style="margin-top: 1.5rem; text-align: center;">
+    <video preload="auto" autoplay muted loop playsinline
+           style="pointer-events:none; display:block; width:100%; margin:0;">
+      <source src="./static/videos/goal.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+
+        <!-- Pane: Spatio-Temporal Fusion (placeholder) -->
+        <div id="cap-fusion" class="is-hidden" role="tabpanel">
+            <div class="content has-text-justified" style="margin-top: 1rem;">
+                <p>
+  In this video, both the camera and the scene itself are in motion. By leveraging the trajectory field predicted
+  by Trace Anything, we can canonically align the dynamics into a single reference frame. This not only
+  enables faithful reconstruction of underlying structures but also disentangles scene motion from viewpoint changes.
+</p>
+   
+            </div>
+
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <video preload="auto" autoplay muted loop playsinline
+                    style="pointer-events:none; display:block; width:100%; margin:0;">
+                <source src="./static/videos/fusion.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<style>
+  /* Custom font + size for tabs */
+  .custom-tabs ul li a {
+    font-size: 20px !important;
+    padding: 0.75em 1.5em !important; /* make buttons feel bigger */
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 遍历所有 tab 组
+    document.querySelectorAll('.tabs').forEach(tabs => {
+      const tabLinks = tabs.querySelectorAll('ul li a[role="tab"]');
+
+      tabLinks.forEach(tab => {
+        tab.addEventListener('click', e => {
+          e.preventDefault();
+          const targetId = tab.getAttribute('data-target');
+
+          // 更新 tab 栏选中状态
+          tabLinks.forEach(t => {
+            const isActive = t === tab;
+            t.parentElement.classList.toggle('is-active', isActive);
+            t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+
+          // 找到当前 section 内所有面板，切换显示
+          const section = tabs.closest('section, .section') || document;
+          section.querySelectorAll('[role="tabpanel"]').forEach(panel => {
+            panel.classList.toggle('is-hidden', panel.id !== targetId);
+          });
+        });
+      });
+
+      // 默认激活第一个 tab
+      const firstTab = tabLinks[0];
+      if (firstTab) {
+        firstTab.click();
+      }
+    });
+  });
+</script>
+
+
+
+
+
+
+
+
+
+    <section class="section" style="padding-top: 5rem;">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-four-fifths">
+                    <h2 class="title is-3">Related Work</h2>
+                    <div class="content has-text-justified">
+    <p>Shout-out to these amazing works:</p>
+     <ul style="font-size:1rem; line-height:1.6; margin-left:1.2rem;">
+        <li><a href="https://monst3r-project.github.io/">MonST3R: A Simple Approach for Estimating Geometry in the Presence of Motion</a></li>
+        <li><a href="https://easi3r.github.io/">Easi3R: Estimating Disentangled Motion from DUSt3R Without Training</a></li>
+        <li><a href="https://st4rtrack.github.io/">St4RTrack: Simultaneous 4D Reconstruction and Tracking in the World</a></li>
+        <li><a href="https://github.com/wyddmw/POMATO">POMATO: Marrying Pointmap Matching with Temporal Motions for Dynamic 3D Reconstruction</a></li>
+    </ul>
+    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <section class="section" id="BibTeX">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-justified">
+                <div class="column is-four-fifths">
+
+                    <h2 class="title">BibTeX</h2>
+                    <pre><code>
+    @article{xxx,
+        }
+                    </code></pre>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer class="footer" style="background-color: transparent; padding-top: 2rem; padding-bottom: 2rem;">
+        <div align="center" class="container">
+            <div class="columns is-centered">
+                <div class="content">
+                    Design borrowed from <a href="https://github.com/nerfies/nerfies.github.io">nerfies</a>.
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('nav1').classList.add('active');
+        showSection('vs_mon');
+        loadComparisonIframes('mon');
+    });
+
+    Element.prototype.contains = function(text) {
+        return this.textContent.includes(text);
+    };
+    </script>
+</body>
+
+</html>
