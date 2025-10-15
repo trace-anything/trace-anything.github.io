@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Interactive Results of Trace Anything</title>
+  <link rel="icon" href="./icons/trace-anything.png" type="image/png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+  <style>
+    body {
+      padding: 2em;
+      font-family: sans-serif;
+    }
+
+    iframe {
+      border-radius: 0.5em;
+      width: 32em;
+      height: 32em;
+      border: none;
+      box-shadow: 0 0 1em 0em rgba(0, 0, 0, 0.15);
+    }
+
+    video, img {
+      border-radius: 0.5em;
+      box-shadow: 0 0 1em 0em rgba(0, 0, 0, 0.15);
+      width: 20em;
+      height: auto;
+    }
+
+    .row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1.5em;
+      margin-bottom: 3em;
+    }
+
+    .input-block {
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      iframe, video, img {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .instructions, .instructions_small {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2em;
+      text-align: center;
+      padding: 1em;
+    }
+
+    .instruction-item, .instruction-item_small {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+
+    .instruction-item img { width: 36px; height: 36px; }
+    .instruction-item_small img { width: 30px; height: 30px; }
+  </style>
+</head>
+
+<body>
+  <p style="text-align: center; font-size: 2em; font-weight: bold;">Interactive Results</p>
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <div class="instruction-item"><img src="icons/left-click.png" alt="Left Click"><span>Left-drag to <strong>rotate</strong></span></div>
+    <div class="instruction-item"><img src="icons/scroll-wheel.png" alt="Scroll"><span>Scroll to <strong>zoom</strong></span></div>
+    <div class="instruction-item"><img src="icons/right-click.png" alt="Right Click"><span>Right-drag to <strong>pan</strong></span></div>
+  </div>
+
+  <div class="instructions_small">
+    <div class="instruction-item_small"><img src="icons/letter-w.png"><img src="icons/letter-s.png"><span>Forward / Backward</span></div>
+    <div class="instruction-item_small"><img src="icons/letter-a.png"><img src="icons/letter-d.png"><span>Left / Right</span></div>
+    <div class="instruction-item_small"><img src="icons/letter-q.png"><img src="icons/letter-e.png"><span>Up / Down</span></div>
+  </div>
+
+  <p style="text-align:center; color:#555;">(Results are downsampled <strong>4×</strong> for efficient online rendering)</p>
+
+  <!-- ROW 1: labubu1 -->
+<div class="row" style="display:flex; justify-content:center; align-items:flex-start; flex-wrap:wrap; gap:1.5em; margin-bottom:3em;">
+  <div class="input-block" style="text-align:center;">
+    <p><strong>Input Video</strong></p>
+    <video src="assets/inputs/labubu1.mp4" autoplay loop muted playsinline style="width:20em; border-radius:0.5em; box-shadow:0 0 0.5em rgba(0,0,0,0.15);"></video>
+  </div>
+    <iframe src="https://trace-anything.github.io/viser-client/?playbackPath=https://trace-anything.github.io/recordings_2/labubu1_traj.viser&initialCameraPosition=-0.000,0.,-0.0&initialCameraLookAt=0,0.3,0" style="width:32em; height:32em; border:none; border-radius:0.5em; box-shadow:0 0 1em rgba(0,0,0,0.15);"></iframe>
+    <iframe src="https://trace-anything.github.io/viser-client/?playbackPath=https://trace-anything.github.io/recordings_2/labubu1_fg.viser&initialCameraPosition=-0.000,0.,-0.0&initialCameraLookAt=0,0.3,0" style="width:32em; height:32em; border:none; border-radius:0.5em; box-shadow:0 0 1em rgba(0,0,0,0.15);"></iframe>
+  </div>
+
+  <!-- ROW 2: Monkeys -->
+  <div class="row">
+    <div class="input-block" style="text-align:center;">
+    <p><strong>Input Video</strong></p>
+    <video src="assets/inputs/labubu2.mp4" autoplay loop muted playsinline style="width:20em; border-radius:0.5em; box-shadow:0 0 0.5em rgba(0,0,0,0.15);"></video>
+  </div>
+    <iframe src="https://trace-anything.github.io/viser-client/?playbackPath=https://trace-anything.github.io/recordings_2/labubu2_traj.viser&initialCameraPosition=-0.000,0.,-0.0&initialCameraLookAt=0,0.3,0"style="width:32em; height:32em; border:none; border-radius:0.5em; box-shadow:0 0 1em rgba(0,0,0,0.15);"></iframe>
+    <iframe src="https://trace-anything.github.io/viser-client/?playbackPath=https://trace-anything.github.io/recordings_2/labubu2_fg.viser&initialCameraPosition=-0.000,0.,-0.0&initialCameraLookAt=0,0.3,0"style="width:32em; height:32em; border:none; border-radius:0.5em; box-shadow:0 0 1em rgba(0,0,0,0.15);"></iframe>
+  </div>
+
+  <!-- ROW 3: Dog -->
+  <div class="row">
+  <div class="input-block" style="width:20em; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+    <p><strong>Input Image Pair</strong></p>
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <img src="assets/inputs/egg/" alt="dog 000" style="width: 15em; border-radius: 0.5em; box-shadow: 0 0 0.5em rgba(0,0,0,0.15); margin-bottom: 0.2em;">
+      <hr style="width: 80%; height: 0.2em; background-color: #ccc; border: none; border-radius: 1em; margin: 0.3em 0;">
+      <img src="assets/inputs/egg/" alt="dog 001" style="width: 15em; border-radius: 0.5em; box-shadow: 0 0 0.5em rgba(0,0,0,0.15); margin-top: 0.2em;">
+    </div>
+  </div>
+    <iframe src="https://trace-anything.github.io/viser-client/?playbackPath=https://trace-anything.github.io/recordings_2/egg_traj.viser&initialCameraPosition=-0.000,0.,-0.0&initialCameraLookAt=0,0.3,0"style="width:32em; height:32em; border:none; border-radius:0.5em; box-shadow:0 0 1em rgba(0,0,0,0.15);"></iframe>
+    <iframe src="https://trace-anything.github.io/viser-client/?playbackPath=https://trace-anything.github.io/recordings_2/egg_fg.viser&initialCameraPosition=-0.000,0.,-0.0&initialCameraLookAt=0,0.3,0"style="width:32em; height:32em; border:none; border-radius:0.5em; box-shadow:0 0 1em rgba(0,0,0,0.15);"></iframe>
+  </div>
+
+  <!-- ROW 4: Parkour -->
+  <div class="row">
+    <div class="input-block">
+      <p><strong>Input Image Pair</strong></p>
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <img src="assets/inputs/lego/000.png" alt="parkour 000" style="width: 20em; border-radius: 0.5em; box-shadow: 0 0 0.5em rgba(0,0,0,0.15); margin-bottom: 0.2em;">
+        <hr style="width: 80%; height: 0.2em; background-color: #ccc; border: none; border-radius: 1em; margin: 0.3em 0;">
+        <img src="assets/inputs/lego/001.png" alt="parkour 001" style="width: 20em; border-radius: 0.5em; box-shadow: 0 0 0.5em rgba(0,0,0,0.15); margin-top: 0.2em;">
+      </div>
+    </div>
+    <iframe src="https://trace-anything.github.io/viser-client/?playbackPath=https://trace-anything.github.io/recordings_2/lego_traj.viser&initialCameraPosition=-0.000,0.,-0.0&initialCameraLookAt=0,0.3,0"style="width:32em; height:32em; border:none; border-radius:0.5em; box-shadow:0 0 1em rgba(0,0,0,0.15);"></iframe>
+    <iframe src="https://trace-anything.github.io/viser-client/?playbackPath=https://trace-anything.github.io/recordings_2/lego_fg.viser&initialCameraPosition=-0.000,0.,-0.0&initialCameraLookAt=0,0.3,0"style="width:32em; height:32em; border:none; border-radius:0.5em; box-shadow:0 0 1em rgba(0,0,0,0.15);"></iframe>
+  </div>
+</body>
+</html>
