@@ -367,18 +367,18 @@
             <h2 class="title is-3">Abstract</h2>
             <div class="content has-text-justified">
             <p>
-                Building 4D video representations to model underlying spacetime constitutes a crucial step toward understanding dynamic scenes, 
-                yet there is no consensus on the paradigm: current approaches resort to additional estimators such as depth, flow, or tracking, 
-                or to heavy per-scene optimization, making them brittle and hard to generalize. In a video, its atomic unit, the pixel, follows 
-                a continuous 3D trajectory that unfolds over time, acting as the atomic primitive of dynamics. Recognizing this, we propose to 
-                represent any video as a <strong>Trajectory Field</strong>: a dense mapping that assigns each pixel in each frame to a parametric 3D trajectory.
-                To this end, we introduce <strong>Trace Anything</strong>, a neural network that predicts the trajectory field in a feed-forward manner. 
-                Specifically, for each video frame, the model outputs a series of control point maps, defining parametric trajectories for each pixel.
-                Together, our representation and model directly construct a 4D video representation in a single forward pass, without additional estimators 
-                or global alignment. We develop a <strong>synthetic data platform</strong> to construct a training dataset and a benchmark for trajectory field estimation.
-                Experiments show that Trace Anything surpasses existing methods or performs competitively on the new benchmark and established 
-                point tracking benchmarks, with significant efficiency gains. Moreover, it demonstrates new capabilities such as goal-conditioned 
-                manipulation, motion forecasting, and spatio-temporal fusion. 
+                Effective spatio-temporal representation is fundamental to modeling, understanding, and predicting dynamics in videos. 
+                The atomic unit of a video, the pixel, traces a continuous 3D trajectory over time, serving as the primitive element of 
+                dynamics. Based on this principle, we propose representing any video as a <strong>Trajectory Field</strong>: a dense mapping
+                 that assigns a continuous 3D trajectory function of time to each pixel in every frame. With this representation, we introduce 
+                 <strong>Trace Anything</strong>, a neural network that predicts the entire trajectory field in a single feed-forward pass. 
+                 Specifically, for each pixel in each frame, our model predicts a set of control points that parameterizes a trajectory 
+                 (i.e., a B-spline), yielding its 3D position at arbitrary query time instants. We trained the Trace Anything model on 
+                 large-scale 4D data, including data from our new platform, and our experiments demonstrate that: (i) Trace Anything achieves 
+                 state-of-the-art performance on our new benchmark for trajectory field estimation and performs competitively on established 
+                 point-tracking benchmarks; (ii) it offers significant efficiency gains thanks to its one-pass paradigm, without requiring 
+                 iterative optimization or auxiliary estimators; and (iii) it exhibits emergent abilities, including goal-conditioned 
+                 manipulation, motion forecasting, and spatio-temporal fusion. 
             </p>
             </div>
 
